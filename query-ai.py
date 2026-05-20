@@ -1,0 +1,29 @@
+import os
+from openai import OpenAI
+
+# Environment variables you set locally or in your app service:
+FOUNDRY_KEY = "... your key ..."
+ENDPOINT = "https://ai-fehsenfeldxander8884ai421886655676.services.ai.azure.com/openai/v1"
+MODEL_NAME = "grok-4-20-reasoning"  # e.g., "gpt-4.1-mini" deployed as "my-vision-deploy"
+
+client = OpenAI(
+    api_key=os.getenv("FOUNDRY_KEY"),
+    base_url=os.getenv("ENDPOINT"),
+)
+
+image_url = ""
+
+response = client.responses.create(
+    model=os.getenv("MODEL_NAME"),  # your deployment name 
+    input=[
+        {
+            "role": "user",
+            "content": [
+                {"type": "input_text", "text": "What is in this image? Provide 3 bullet points."},
+                {"type": "input_image", "image_url": image_url}
+            ],
+        }
+    ],
+)
+
+print(response.output_text)
